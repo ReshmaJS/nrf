@@ -117,6 +117,27 @@ func nnrfNFManagementCondition(nf *models.NFProfile, nfprofile models.NFProfile)
 }
 
 func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
+	copyBasicLists(nf, nfprofile)
+	copyPriorityCapacityLoad(nf, nfprofile)
+	copyLocality(nf, nfprofile)
+
+	copyUdrInfo(nf, nfprofile)
+	copyUdmInfo(nf, nfprofile)
+	copyAusfInfo(nf, nfprofile)
+	copyAmfInfo(nf, nfprofile)
+	copySmfInfo(nf, nfprofile)
+	copyUpfInfo(nf, nfprofile)
+	copyPcfInfo(nf, nfprofile)
+	copyBsfInfo(nf, nfprofile)
+	copyChfInfo(nf, nfprofile)
+
+	copyNrfInfo(nf, nfprofile)
+	copyRecoveryTime(nf, nfprofile)
+	copyNfServicePersistence(nf, nfprofile)
+	copyNfServices(nf, nfprofile)
+}
+
+func copyBasicLists(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// sNssais
 	if sNssais, ok := nfprofile.GetSNssaisOk(); ok {
 		a := make([]models.Snssai, len(sNssais))
@@ -157,6 +178,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		copy(a, allowedNssais)
 		nf.SetAllowedNssais(a)
 	}
+}
+
+func copyPriorityCapacityLoad(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// Priority
 	if nfprofile.GetPriority() > 0 && nfprofile.GetPriority() <= 65535 {
 		nf.SetPriority(nfprofile.GetPriority())
@@ -169,11 +193,16 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 	if nfprofile.GetLoad() > 0 && nfprofile.GetLoad() <= 100 {
 		nf.SetLoad(nfprofile.GetLoad())
 	}
+}
+
+func copyLocality(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// Locality
 	if nfprofile.GetLocality() != "" {
 		nf.SetLocality(nfprofile.GetLocality())
 	}
+}
 
+func copyUdrInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// udrInfo
 	if nfprofile.UdrInfo != nil {
 		a := models.NewUdrInfo()
@@ -200,6 +229,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 
 		nf.SetUdrInfo(*a)
 	}
+}
+
+func copyUdmInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// udmInfo
 	if nfprofile.UdmInfo != nil {
 		a := models.NewUdmInfo()
@@ -226,6 +258,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 
 		nf.SetUdmInfo(*a)
 	}
+}
+
+func copyAusfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// ausfInfo
 	if nfprofile.AusfInfo != nil {
 		a := models.NewAusfInfo()
@@ -244,6 +279,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 
 		nf.SetAusfInfo(*a)
 	}
+}
+
+func copyAmfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// amfInfo
 	if nfprofile.AmfInfo != nil {
 		a := models.NewAmfInfoWithDefaults()
@@ -281,6 +319,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		}
 		nf.SetAmfInfo(*a)
 	}
+}
+
+func copySmfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// smfInfo
 	if nfprofile.SmfInfo != nil {
 		a := models.NewSmfInfoWithDefaults()
@@ -306,6 +347,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		}
 		nf.SetSmfInfo(*a)
 	}
+}
+
+func copyUpfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// upfInfo
 	if nfprofile.UpfInfo != nil {
 		a := models.NewUpfInfoWithDefaults()
@@ -326,6 +370,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 
 		nf.SetUpfInfo(*a)
 	}
+}
+
+func copyPcfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// pcfInfo
 	if nfprofile.PcfInfo != nil {
 		a := models.NewPcfInfo()
@@ -347,6 +394,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		}
 		nf.SetPcfInfo(*a)
 	}
+}
+
+func copyBsfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// bsfInfo
 	if nfprofile.BsfInfo != nil {
 		a := models.NewBsfInfo()
@@ -378,6 +428,9 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		}
 		nf.SetBsfInfo(*a)
 	}
+}
+
+func copyChfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// chfInfo
 	if chfInfo, ok := nfprofile.GetChfInfoOk(); ok {
 		a := models.NewChfInfo()
@@ -395,20 +448,29 @@ func nnrfNFManagementOption(nf *models.NFProfile, nfprofile models.NFProfile) {
 		}
 		nf.SetChfInfo(*a)
 	}
+}
+
+func copyNrfInfo(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// nrfInfo
 	if nrfInfo, ok := nfprofile.GetNrfInfoOk(); ok {
 		nf.SetNrfInfo(*nrfInfo)
 	}
+}
 
+func copyRecoveryTime(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// recoveryTime
 	if recoveryTime, ok := nfprofile.GetRecoveryTimeOk(); ok {
 		// Update when restart (Setting by NF itself)
 		nf.SetRecoveryTime(*recoveryTime)
 	}
+}
 
+func copyNfServicePersistence(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// nfServicePersistence
 	nf.SetNfServicePersistence(nfprofile.GetNfServicePersistence())
+}
 
+func copyNfServices(nf *models.NFProfile, nfprofile models.NFProfile) {
 	// nfServices
 	if nfServices, ok := nfprofile.GetNfServicesOk(); ok {
 		a := make([]models.NFService, len(nfServices))
@@ -533,22 +595,36 @@ func nnrfUriList(originalUL *UriList, UL *UriList, location []string) {
 func GetNotificationUri(nfProfile models.NFProfile) []string {
 	var uriList []string
 
-	// nfTypeCond
+	addNfTypeCond(nfProfile, &uriList)
+	addNfInstanceIDCond(nfProfile, &uriList)
+	addServiceNameCond(nfProfile, &uriList)
+	addAmfCond(nfProfile, &uriList)
+	addGuamiListCond(nfProfile, &uriList)
+	addNetworkSliceCond(nfProfile, &uriList)
+	addNfGroupCond(nfProfile, &uriList)
+
+	return uriList
+}
+
+func addNfTypeCond(nfProfile models.NFProfile, uriList *[]string) {
 	nfTypeCond := bson.M{
 		"subscrCond": bson.M{
 			"nfType": nfProfile.GetNfType(),
 		},
 	}
-	setUriListByFilter(nfTypeCond, &uriList)
+	setUriListByFilter(nfTypeCond, uriList)
+}
 
-	// NfInstanceIdCond
+func addNfInstanceIDCond(nfProfile models.NFProfile, uriList *[]string) {
 	nfInstanceIDCond := bson.M{
 		"subscrCond": bson.M{
 			"nfInstanceId": nfProfile.GetNfInstanceId(),
 		},
 	}
-	setUriListByFilter(nfInstanceIDCond, &uriList)
+	setUriListByFilter(nfInstanceIDCond, uriList)
+}
 
+func addServiceNameCond(nfProfile models.NFProfile, uriList *[]string) {
 	// ServiceNameCond
 	if nfServices, ok := nfProfile.GetNfServicesOk(); ok {
 		var ServiceNameCond bson.M
@@ -561,9 +637,11 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				"$in": serviceNames,
 			},
 		}
-		setUriListByFilter(ServiceNameCond, &uriList)
+		setUriListByFilter(ServiceNameCond, uriList)
 	}
+}
 
+func addAmfCond(nfProfile models.NFProfile, uriList *[]string) {
 	// AmfCond
 	if amfInfo, ok := nfProfile.GetAmfInfoOk(); ok {
 		amfCond := bson.M{
@@ -572,10 +650,15 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				"amfRegionId": amfInfo.GetAmfRegionId(),
 			},
 		}
-		setUriListByFilter(amfCond, &uriList)
+		setUriListByFilter(amfCond, uriList)
+	}
+}
 
+func addGuamiListCond(nfProfile models.NFProfile, uriList *[]string) {
+	// GuamiListCond
+	if nfProfile.AmfInfo != nil {
 		var guamiListFilter bson.M
-		if guamiList, ok := amfInfo.GetGuamiListOk(); ok {
+		if guamiList, ok := nfProfile.AmfInfo.GetGuamiListOk(); ok {
 			var guamiListBsonArray bson.A
 			for _, guami := range guamiList {
 				tmp, err := json.Marshal(guami)
@@ -593,10 +676,11 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 			guamiListFilter = bson.M{
 				"$or": guamiListBsonArray,
 			}
-			setUriListByFilter(guamiListFilter, &uriList)
+			setUriListByFilter(guamiListFilter, uriList)
 		}
 	}
-
+}
+func addNetworkSliceCond(nfProfile models.NFProfile, uriList *[]string) {
 	// NetworkSliceCond
 	if sNssais, ok := nfProfile.GetSNssaisOk(); ok {
 		var networkSliceFilter bson.M
@@ -644,9 +728,11 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				},
 			}
 		}
-		setUriListByFilter(networkSliceFilter, &uriList)
+		setUriListByFilter(networkSliceFilter, uriList)
 	}
+}
 
+func addNfGroupCond(nfProfile models.NFProfile, uriList *[]string) {
 	// NfGroupCond
 	nfType := nfProfile.GetNfType()
 	udrInfo, okUdr := nfProfile.GetUdrInfoOk()
@@ -660,7 +746,7 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				"nfGroupId": udrInfo.GetGroupId(),
 			},
 		}
-		setUriListByFilter(nfGroupCond, &uriList)
+		setUriListByFilter(nfGroupCond, uriList)
 	case okUdm:
 		nfGroupCond := bson.M{
 			"subscrCond": bson.M{
@@ -668,7 +754,7 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				"nfGroupId": udmInfo.GetGroupId(),
 			},
 		}
-		setUriListByFilter(nfGroupCond, &uriList)
+		setUriListByFilter(nfGroupCond, uriList)
 	case okAusf:
 		nfGroupCond := bson.M{
 			"subscrCond": bson.M{
@@ -676,10 +762,8 @@ func GetNotificationUri(nfProfile models.NFProfile) []string {
 				"nfGroupId": ausfInfo.GetGroupId(),
 			},
 		}
-		setUriListByFilter(nfGroupCond, &uriList)
+		setUriListByFilter(nfGroupCond, uriList)
 	}
-
-	return uriList
 }
 
 func NnrfUriListLimit(originalUL *UriList, limit int) {

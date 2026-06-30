@@ -370,10 +370,10 @@ func NFDeregisterProcedure(nfInstanceID string) (nfType string, problemDetails *
 		uriList := nrfContext.GetNotificationUri(nfProfile0)
 		nfInstanceUri := nrfContext.GetNfInstanceURI(nfInstanceID)
 		// set info for NotificationData
-		Notification_event := models.NOTIFICATIONEVENTTYPE_NF_DEREGISTERED
+		NotificationEvent := models.NOTIFICATIONEVENTTYPE_NF_DEREGISTERED
 		for _, uri := range uriList {
 			logger.ManagementLog.Infof("status Notification Uri: %v", uri)
-			problemDetails = SendNFStatusNotify(Notification_event, nfInstanceUri, uri)
+			problemDetails = SendNFStatusNotify(NotificationEvent, nfInstanceUri, uri)
 			if problemDetails != nil {
 				logger.ManagementLog.Infoln("error in status notify", problemDetails)
 			}
@@ -547,19 +547,30 @@ func NFRegisterProcedure(nfProfile models.NFProfile) (header http.Header, respon
 			putData["createdAt"] = time.Now()
 		}
 	}
-
 	// Update NF Profile case
+	return handleNFProfileUpdateOrCreate(nf, nfProfile, locationHeaderValue, collName, filter, putData)
+}
+func handleNFProfileUpdateOrCreate(
+	nf models.NFProfile,
+	nfProfile models.NFProfile,
+	locationHeaderValue string,
+	collName string,
+	filter bson.M,
+	putData bson.M,
+) (http.Header, *models.NFProfile, *models.ProblemDetails) {
+	var header http.Header
+	var problemDetails *models.ProblemDetails
 	if ok, _ := dbadapter.DBClient.RestfulAPIPutOne(collName, filter, putData); ok { // true insert
 		logger.ManagementLog.Infoln("RestfulAPIPutOne True Insert")
 		uriList := nrfContext.GetNotificationUri(nf)
 
 		// set info for NotificationData
-		Notification_event := models.NOTIFICATIONEVENTTYPE_NF_PROFILE_CHANGED
+		NotificationEvent := models.NOTIFICATIONEVENTTYPE_NF_PROFILE_CHANGED
 		nfInstanceUri := locationHeaderValue
 
 		// receive the rsp from handler
 		for _, uri := range uriList {
-			problemDetails = SendNFStatusNotify(Notification_event, nfInstanceUri, uri)
+			problemDetails = SendNFStatusNotify(NotificationEvent, nfInstanceUri, uri)
 			if problemDetails != nil {
 				return nil, nil, problemDetails
 			}
@@ -572,11 +583,11 @@ func NFRegisterProcedure(nfProfile models.NFProfile) (header http.Header, respon
 		logger.ManagementLog.Infoln("create NF Profile", nfProfile.GetNfType())
 		uriList := nrfContext.GetNotificationUri(nf)
 		// set info for NotificationData
-		notification_event := models.NOTIFICATIONEVENTTYPE_NF_REGISTERED
+		NotificationEvent := models.NOTIFICATIONEVENTTYPE_NF_REGISTERED
 		nfInstanceUri := locationHeaderValue
 
 		for _, uri := range uriList {
-			problemDetails = SendNFStatusNotify(notification_event, nfInstanceUri, uri)
+			problemDetails = SendNFStatusNotify(NotificationEvent, nfInstanceUri, uri)
 			if problemDetails != nil {
 				return nil, nil, problemDetails
 			}
@@ -615,11 +626,11 @@ func GetNfTypeByNfInstanceID(nfInstanceID string) (nfType string) {
 	return "UNKNOWN_NF"
 }
 
-func SendNFStatusNotify(Notification_event models.NotificationEventType, nfInstanceUri string,
+func SendNFStatusNotify(NotificationEvent models.NotificationEventType, nfInstanceUri string,
 	url string,
 ) *models.ProblemDetails {
 	notificationData := models.NotificationData{
-		Event:         Notification_event,
+		Event:         NotificationEvent,
 		NfInstanceUri: nfInstanceUri,
 	}
 	body, err := json.Marshal(notificationData)

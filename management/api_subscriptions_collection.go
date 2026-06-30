@@ -31,6 +31,7 @@ import (
 	"github.com/omec-project/util/httpwrapper"
 )
 
+// const ContentTypeJSON = "application/json"
 // Post /subscriptions
 // Create a new subscription
 func HTTPCreateSubscription(c *gin.Context) {
@@ -47,7 +48,7 @@ func HTTPCreateSubscription(c *gin.Context) {
 	}
 
 	// step 2: convert requestBody to openapi models
-	err = openapi.Decode(&subscription, requestBody, "application/json")
+	err = openapi.Decode(&subscription, requestBody, ContentTypeJSON)
 	if err != nil {
 		problemDetail := "[Request Body] " + err.Error()
 		rsp := utils.ProblemDetailsMalformedRequestSyntax(problemDetail)
@@ -59,12 +60,12 @@ func HTTPCreateSubscription(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, subscription)
 
 	httpResponse := producer.HandleCreateSubscriptionRequest(req)
-	responseBody, err := openapi.SetBody(httpResponse.Body, "application/json")
+	responseBody, err := openapi.SetBody(httpResponse.Body, ContentTypeJSON)
 	if err != nil {
 		logger.ManagementLog.Errorln(err)
 		problemDetails := utils.ProblemDetailsSystemFailure(err.Error())
 		c.JSON(http.StatusInternalServerError, problemDetails)
 	} else {
-		c.Data(httpResponse.Status, "application/json", responseBody.Bytes())
+		c.Data(httpResponse.Status, ContentTypeJSON, responseBody.Bytes())
 	}
 }

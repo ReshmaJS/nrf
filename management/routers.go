@@ -29,6 +29,8 @@ import (
 	utilLogger "github.com/omec-project/util/logger"
 )
 
+const nfInstancePath = "/nf-instances/:nfInstanceID"
+
 // Route is the information for every URI.
 type Route struct {
 	// Name is the name of this Route.
@@ -140,25 +142,25 @@ func getRoutes() []Route {
 		{
 			"DeregisterNFInstance",
 			http.MethodDelete,
-			"/nf-instances/:nfInstanceID",
+			nfInstancePath,
 			HTTPDeregisterNFInstance,
 		},
 		{
 			"GetNFInstance",
 			http.MethodGet,
-			"/nf-instances/:nfInstanceID",
+			nfInstancePath,
 			HTTPGetNFInstance,
 		},
 		{
 			"RegisterNFInstance",
 			http.MethodPut,
-			"/nf-instances/:nfInstanceID",
+			nfInstancePath,
 			HTTPRegisterNFInstance,
 		},
 		{
 			"UpdateNFInstance",
 			http.MethodPatch,
-			"/nf-instances/:nfInstanceID",
+			nfInstancePath,
 			HTTPUpdateNFInstance,
 		},
 		{
